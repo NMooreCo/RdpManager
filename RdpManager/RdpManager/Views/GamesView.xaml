@@ -1,0 +1,109 @@
+<UserControl x:Class="RdpManager.Views.GamesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid Background="{DynamicResource App.Background.Window}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="{DynamicResource App.Background.Elevated}"
+                Padding="24" Margin="0,0,0,20">
+            <StackPanel>
+                <TextBlock Text="🎮 Secret Games Unlocked!" FontSize="28" FontWeight="Bold"
+                           Foreground="{DynamicResource App.Text.Primary}"/>
+                <TextBlock Text="Take a break and have some fun!" FontSize="14"
+                           Foreground="{DynamicResource App.Text.Secondary}" Margin="0,4,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Game Container -->
+        <Grid Grid.Row="1" x:Name="GameContainer">
+            <!-- Game Selection Menu (initial state) -->
+            <Grid x:Name="GameSelectionPanel" Visibility="Visible">
+                <ItemsControl HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <!-- Snake Game Card -->
+                    <Border Background="{DynamicResource App.Background.Surface}"
+                            BorderBrush="{DynamicResource App.Border.Outline}"
+                            BorderThickness="1"
+                            CornerRadius="12"
+                            Padding="32"
+                            Margin="16"
+                            Width="220"
+                            Height="260"
+                            Cursor="Hand"
+                            MouseLeftButtonDown="SnakeCard_Click">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource App.Hover}"/>
+                                        <Setter Property="BorderBrush" Value="{DynamicResource App.Primary}"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <StackPanel HorizontalAlignment="Center">
+                            <!-- Snake Icon -->
+                            <TextBlock Text="🐍" FontSize="72" HorizontalAlignment="Center" Margin="0,0,0,16"/>
+                            <TextBlock Text="SNAKE" FontSize="24" FontWeight="Bold"
+                                       Foreground="{DynamicResource App.Text.Primary}"
+                                       HorizontalAlignment="Center"/>
+                            <TextBlock Text="Classic snake game" FontSize="13"
+                                       Foreground="{DynamicResource App.Text.Secondary}"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,8,0,16"/>
+                            <TextBlock x:Name="SnakeHighScore" Text="High Score: 0" FontSize="12"
+                                       Foreground="{DynamicResource App.Text.Secondary}"
+                                       HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Back Button Card (to close games tab) -->
+                    <Border Background="{DynamicResource App.Background.Surface}"
+                            BorderBrush="{DynamicResource App.Border.Outline}"
+                            BorderThickness="1"
+                            CornerRadius="12"
+                            Padding="32"
+                            Margin="16"
+                            Width="220"
+                            Height="260"
+                            Cursor="Hand"
+                            MouseLeftButtonDown="BackCard_Click">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource App.Hover}"/>
+                                        <Setter Property="BorderBrush" Value="#F44336"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="🚪" FontSize="72" HorizontalAlignment="Center" Margin="0,0,0,16"/>
+                            <TextBlock Text="EXIT" FontSize="24" FontWeight="Bold"
+                                       Foreground="{DynamicResource App.Text.Primary}"
+                                       HorizontalAlignment="Center"/>
+                            <TextBlock Text="Return to work" FontSize="13"
+                                       Foreground="{DynamicResource App.Text.Secondary}"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,8,0,0"/>
+                        </StackPanel>
+                    </Border>
+                </ItemsControl>
+            </Grid>
+
+            <!-- Game Content (hidden initially, shown when game selected) -->
+            <ContentControl x:Name="GameContent" Visibility="Collapsed"/>
+        </Grid>
+    </Grid>
+</UserControl>

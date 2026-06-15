@@ -1,0 +1,586 @@
+<windows:BorderlessWindowBase x:Class="RdpManager.ModernMainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:models="clr-namespace:RdpManager.Models"
+        xmlns:local="clr-namespace:RdpManager"
+        xmlns:converters="clr-namespace:RdpManager.Converters"
+        xmlns:windows="clr-namespace:RdpManager.Windows"
+        mc:Ignorable="d"
+        Title="RDP Manager"
+        Height="720" Width="1280"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        ResizeMode="CanResize"
+        Background="Transparent"
+        FontFamily="Segoe UI, -apple-system, BlinkMacSystemFont, sans-serif"
+        Closing="Window_Closing">
+
+    <!-- WindowChrome for native resize/drag behavior -->
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="40"
+                      CornerRadius="0"
+                      GlassFrameThickness="1"
+                      ResizeBorderThickness="6"
+                      UseAeroCaptionButtons="False"/>
+    </WindowChrome.WindowChrome>
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <converters:NullToFontWeightConverter x:Key="NullToFontWeightConverter" NullFontWeight="SemiBold" NotNullFontWeight="Normal" />
+        <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+        
+        <!-- Professional Icon Button Style -->
+        <Style x:Key="IconButton" TargetType="Button">
+            <Setter Property="Width" Value="28"/>
+            <Setter Property="Height" Value="28"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}"
+                                CornerRadius="4" Padding="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource App.Hover}"/>
+                                <Setter TargetName="border" Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource App.Hover}"/>
+                                <Setter TargetName="border" Property="Opacity" Value="0.7"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Header Icon Button (for dark header background with white icons) -->
+        <Style x:Key="HeaderIconButton" TargetType="Button">
+            <Setter Property="Width" Value="32"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}"
+                                CornerRadius="4" Padding="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#33FFFFFF"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#4DFFFFFF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Window Control Button (Full-height, modern style) -->
+        <Style x:Key="WindowControlButton" TargetType="Button">
+            <Setter Property="Width" Value="44"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#33FFFFFF"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#4DFFFFFF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Close Window Button (Full-height with red hover) -->
+        <Style x:Key="CloseWindowButton" TargetType="Button">
+            <Setter Property="Width" Value="44"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#E81123"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#C50F1F"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern Button Style -->
+        <Style x:Key="ModernButton" TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource App.Background.Surface}"/>
+            <Setter Property="Foreground" Value="{DynamicResource App.Text.Primary}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource App.Border.Outline}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource App.Hover}"/>
+                                <Setter TargetName="border" Property="Opacity" Value="0.3"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource App.Hover}"/>
+                                <Setter TargetName="border" Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <!-- Primary Action Button -->
+        <Style x:Key="PrimaryButton" TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource App.Primary}"/>
+            <Setter Property="Foreground" Value="{DynamicResource App.Primary.Foreground}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="14,7"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" 
+                                CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource App.Primary.Darker}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource App.Primary.Darker}"/>
+                                <Setter TargetName="border" Property="Opacity" Value="0.8"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <!-- Success Button -->
+        <Style x:Key="SuccessButton" TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource App.Semantic.Success}"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="14,7"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}"
+                                CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#16A34A"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#15803D"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    
+    <Window.InputBindings>
+        <KeyBinding Key="N" Modifiers="Ctrl" Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=AddCommand}"/>
+        <KeyBinding Key="E" Modifiers="Ctrl" Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=EditCommand}"/>
+        <KeyBinding Key="Delete" Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=RemoveCommand}"/>
+        <KeyBinding Key="Enter" Modifiers="Ctrl" Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=ConnectCommand}"/>
+        <KeyBinding Key="F" Modifiers="Ctrl" Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=FocusSearchCommand}"/>
+        <KeyBinding Key="U" Modifiers="Ctrl" Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=UpdateCredentialsCommand}"/>
+    </Window.InputBindings>
+    
+    <materialDesign:DialogHost x:Name="RootDialogHost" Identifier="RootDialogHost" CloseOnClickAway="True">
+        <Border x:Name="WindowBorder"
+                CornerRadius="10"
+                Background="{DynamicResource App.Background.Window}"
+                BorderBrush="{DynamicResource App.Border.Divider}"
+                BorderThickness="1">
+        <Grid x:Name="RootGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <!-- Professional Header (Draggable) -->
+            <Border Grid.Row="0" Background="{DynamicResource App.Header.Background}"
+                    MouseLeftButtonDown="Header_MouseLeftButtonDown">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <!-- App Title -->
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="20,0" VerticalAlignment="Center">
+                        <TextBlock Text="RDP" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource App.Header.Foreground}"/>
+                        <TextBlock Text="Manager" FontSize="16" FontWeight="Light" Foreground="{DynamicResource App.Header.Foreground}" Margin="4,0,0,0"/>
+                    </StackPanel>
+                    
+                    <!-- Header Actions + Window Controls -->
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Stretch" Margin="0,0,0,0">
+                        <!-- Theme Toggle -->
+                        <Button x:Name="ThemeToggleButton"
+                                Style="{StaticResource HeaderIconButton}"
+                                WindowChrome.IsHitTestVisibleInChrome="True"
+                                Click="ThemeToggle_Click"
+                                ToolTip="Toggle Dark/Light Mode"
+                                Margin="0,0,8,0">
+                            <Path x:Name="ThemeIcon" Data="M17.75,4.09L15.22,6.03L16.13,9.09L13.5,7.28L10.87,9.09L11.78,6.03L9.25,4.09L12.44,4L13.5,1L14.56,4L17.75,4.09M21.25,11L19.61,12.25L20.2,14.23L18.5,13.06L16.8,14.23L17.39,12.25L15.75,11L17.81,10.95L18.5,9L19.19,10.95L21.25,11M18.97,15.95C19.8,15.87 20.69,17.05 20.16,17.8C19.84,18.25 19.5,18.67 19.08,19.07C15.17,23 8.84,23 4.94,19.07C1.03,15.17 1.03,8.83 4.94,4.93C5.34,4.53 5.76,4.17 6.21,3.85C6.96,3.32 8.14,4.21 8.06,5.04C7.79,7.9 8.75,10.87 10.95,13.06C13.14,15.26 16.1,16.22 18.97,15.95M17.33,17.97C14.5,17.81 11.7,16.64 9.53,14.5C7.36,12.31 6.2,9.5 6.04,6.68C3.23,9.82 3.34,14.64 6.35,17.66C9.37,20.67 14.19,20.78 17.33,17.97Z"
+                                  Fill="{DynamicResource App.Header.Foreground}" Width="18" Height="18" Stretch="Uniform"/>
+                        </Button>
+
+                        <!-- Update Credentials -->
+                        <Button x:Name="QuickUpdateCredentialsButton"
+                                Content="Update Creds"
+                                Style="{StaticResource SuccessButton}"
+                                Height="30"
+                                FontSize="12"
+                                FontWeight="SemiBold"
+                                Padding="12,6"
+                                WindowChrome.IsHitTestVisibleInChrome="True"
+                                Click="QuickUpdateCredentials_Click"
+                                Margin="0,0,12,0"/>
+
+                        <!-- Window Controls (Full-height) -->
+                        <Button x:Name="MinimizeButton"
+                                Style="{StaticResource WindowControlButton}"
+                                WindowChrome.IsHitTestVisibleInChrome="True"
+                                Click="MinimizeButton_Click"
+                                ToolTip="Minimize">
+                            <Path Data="M20,14H4V10H20" Fill="{DynamicResource App.Header.Foreground}" Width="10" Height="10" Stretch="Uniform"/>
+                        </Button>
+                        <Button x:Name="MaximizeButton"
+                                Style="{StaticResource WindowControlButton}"
+                                WindowChrome.IsHitTestVisibleInChrome="True"
+                                Click="MaximizeButton_Click"
+                                ToolTip="Maximize">
+                            <Path x:Name="MaximizeIcon" Data="M4,4H20V20H4V4M6,8V18H18V8H6Z" Fill="{DynamicResource App.Header.Foreground}" Width="10" Height="10" Stretch="Uniform"/>
+                        </Button>
+                        <Button x:Name="CloseButton"
+                                Style="{StaticResource CloseWindowButton}"
+                                WindowChrome.IsHitTestVisibleInChrome="True"
+                                Click="CloseButton_Click"
+                                ToolTip="Close">
+                            <Path Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" Fill="{DynamicResource App.Header.Foreground}" Width="10" Height="10" Stretch="Uniform"/>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+            
+            <!-- Main Content Area -->
+            <Grid Grid.Row="1" Background="{DynamicResource App.Background.Window}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition x:Name="SidebarColumn" Width="220"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left Sidebar -->
+                <Border x:Name="SidebarBorder" Grid.Column="0" Background="{DynamicResource App.Background.Surface}" BorderBrush="{DynamicResource App.Border.Divider}" BorderThickness="0,0,1,0">
+                    <!-- Navigation Menu -->
+                    <ListBox x:Name="NavigationListBox"
+                                 ItemsSource="{Binding NavigationItems}"
+                                 SelectionChanged="NavigationListBox_SelectionChanged"
+                                 MouseDoubleClick="NavigationListBox_MouseDoubleClick"
+                                 BorderThickness="0"
+                                 Background="Transparent"
+                                 Padding="12,8">
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="Padding" Value="12,0"/>
+                                    <Setter Property="Margin" Value="0,1"/>
+                                    <Setter Property="Visibility" Value="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                    <Setter Property="IsEnabled" Value="{Binding IsEnabled}"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="ListBoxItem">
+                                                <Border x:Name="Border" Background="Transparent" CornerRadius="6">
+                                                    <ContentPresenter Margin="{TemplateBinding Padding}" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsSelected" Value="True">
+                                                        <Setter TargetName="Border" Property="Background" Value="{DynamicResource App.Selection}"/>
+                                                        <Setter Property="Foreground" Value="{DynamicResource App.Primary}"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="Border" Property="Background" Value="{DynamicResource App.Border.Divider}"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <!-- Different height for sections vs sessions -->
+                                        <DataTrigger Binding="{Binding IsSection}" Value="True">
+                                            <Setter Property="Height" Value="40"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsSession}" Value="True">
+                                            <Setter Property="Height" Value="36"/>
+                                            <Setter Property="Padding" Value="32,0,12,0"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <!-- Section Template -->
+                                        <StackPanel Orientation="Horizontal" Visibility="{Binding IsSection, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                            <Path Data="{Binding IconData}"
+                                                  Fill="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, Path=Foreground}"
+                                                  Width="16" Height="16" Stretch="Uniform" Margin="0,0,10,0"/>
+                                            <TextBlock Text="{Binding Name}" FontSize="13" FontWeight="Medium"/>
+                                        </StackPanel>
+
+                                        <!-- Session Template -->
+                                        <Grid Visibility="{Binding IsSession, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                            <Grid.ContextMenu>
+                                                <ContextMenu Style="{StaticResource CompactContextMenu}">
+                                                    <MenuItem Header="Pop-out" Click="ContextMenu_PopOut" Style="{StaticResource CompactMenuItem}">
+                                                        <MenuItem.Icon>
+                                                            <Path Data="M14,14H19V5H14M10,14H5V5H10M14,3V6H19V20A2,2 0 0,1 17,22H7A2,2 0 0,1 5,20V6H10V3H14M12,8V11H9V13H12V16L16,12L12,8Z"
+                                                                  Fill="{DynamicResource App.Primary}" Width="12" Height="12" Stretch="Uniform"/>
+                                                        </MenuItem.Icon>
+                                                    </MenuItem>
+                                                </ContextMenu>
+                                            </Grid.ContextMenu>
+
+                                            <Grid.ToolTip>
+                                                <ToolTip Background="{DynamicResource App.Background.Surface}" BorderBrush="{DynamicResource App.Border.Divider}" BorderThickness="1" Padding="12">
+                                                    <StackPanel MaxWidth="350">
+                                                        <TextBlock Text="{Binding Session.DisplayName}" FontWeight="Bold" FontSize="14" Margin="0,0,0,8" Foreground="{DynamicResource App.Text.Primary}"/>
+
+                                                        <TextBlock FontSize="12" Margin="0,3" Foreground="{DynamicResource App.Text.Primary}">
+                                                            <Run Text="Server: " FontWeight="SemiBold"/>
+                                                            <Run Text="{Binding Session.ServerAddress, Mode=OneWay}"/>
+                                                        </TextBlock>
+
+                                                        <TextBlock FontSize="12" Margin="0,3" Foreground="{DynamicResource App.Text.Primary}"
+                                                                   Visibility="{Binding Session.Domain, Converter={StaticResource NullToVisibilityConverter}}">
+                                                            <Run Text="Domain: " FontWeight="SemiBold"/>
+                                                            <Run Text="{Binding Session.Domain, Mode=OneWay}"/>
+                                                        </TextBlock>
+
+                                                        <TextBlock FontSize="12" Margin="0,3" Foreground="{DynamicResource App.Text.Primary}"
+                                                                   Visibility="{Binding Session.Group, Converter={StaticResource NullToVisibilityConverter}}">
+                                                            <Run Text="Group: " FontWeight="SemiBold"/>
+                                                            <Run Text="{Binding Session.Group, Mode=OneWay}"/>
+                                                        </TextBlock>
+
+                                                        <TextBlock FontSize="12" Margin="0,3" Foreground="{DynamicResource App.Text.Primary}">
+                                                            <Run Text="Status: " FontWeight="SemiBold"/>
+                                                            <Run Text="{Binding Session.StatusText, Mode=OneWay}"/>
+                                                        </TextBlock>
+
+                                                        <TextBlock FontSize="12" Margin="0,3" Foreground="{DynamicResource App.Text.Primary}"
+                                                                   Visibility="{Binding Session.ConnectedAt, Converter={StaticResource NullToVisibilityConverter}}">
+                                                            <Run Text="Duration: " FontWeight="SemiBold"/>
+                                                            <Run Text="{Binding Session.DurationText, Mode=OneWay}"/>
+                                                        </TextBlock>
+
+                                                        <Separator Margin="0,8" Background="{DynamicResource App.Border.Divider}" Visibility="{Binding Session.ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}"/>
+
+                                                        <TextBlock Text="{Binding Session.ErrorMessage}" FontSize="11" Margin="0,0,0,0"
+                                                                   Foreground="{DynamicResource App.Semantic.Error}" TextWrapping="Wrap" FontStyle="Italic"
+                                                                   Visibility="{Binding Session.ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}"/>
+                                                    </StackPanel>
+                                                </ToolTip>
+                                            </Grid.ToolTip>
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <!-- Status Indicator -->
+                                            <Ellipse Grid.Column="0" Width="8" Height="8" Margin="0,0,8,0"
+                                                     Fill="{Binding StatusColor}"/>
+
+                                            <!-- Session Name -->
+                                            <TextBlock Grid.Column="1" Text="{Binding Name}"
+                                                       FontSize="12" TextTrimming="CharacterEllipsis"/>
+
+                                            <!-- Close Button -->
+                                            <Button Grid.Column="2" Width="16" Height="16" Padding="0"
+                                                    Background="Transparent" BorderThickness="0"
+                                                    Click="CloseSessionNav_Click" Tag="{Binding}"
+                                                    ToolTip="Close session">
+                                                <Path Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
+                                                      Fill="{DynamicResource App.Text.Secondary}" Width="10" Height="10" Stretch="Uniform"/>
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                </Border>
+                
+                <!-- Main Content (full height, no global toolbar) -->
+                <Grid x:Name="ContentGrid" Grid.Column="1">
+                    <!-- Content Frame -->
+                    <Border x:Name="ContentOuterBorder" Margin="5">
+                        <Border x:Name="ContentInnerBorder" Background="{DynamicResource App.Background.Surface}" BorderBrush="{DynamicResource App.Border.Divider}" BorderThickness="1" CornerRadius="8">
+                            <ContentControl x:Name="ContentFrame">
+                                <TreeView Name="ComputersTreeView"
+                                          ItemsSource="{Binding RootNodes}"
+                                          BorderThickness="0"
+                                          Background="{DynamicResource App.Background.Surface}"
+                                          Padding="12">
+                                    <TreeView.ItemContainerStyle>
+                                        <Style TargetType="TreeViewItem">
+                                            <Setter Property="IsExpanded" Value="True"/>
+                                            <Setter Property="Padding" Value="0"/>
+                                            <Setter Property="Margin" Value="0"/>
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                        </Style>
+                                    </TreeView.ItemContainerStyle>
+                                    <TreeView.Resources>
+                                        <HierarchicalDataTemplate DataType="{x:Type models:TreeNode}" ItemsSource="{Binding Children}">
+                                            <Border x:Name="ItemBorder" Padding="8,6" CornerRadius="4" Margin="0,1">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    
+                                                    <!-- Icon and Text -->
+                                                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                                        <Path x:Name="ItemIcon"
+                                                              Data="M4,6H20V16H4M20,18A2,2 0 0,0 22,16V6C22,4.89 21.1,4 20,4H4C2.89,4 2,4.89 2,6V16A2,2 0 0,0 4,18H0V20H24V18H20Z"
+                                                              Fill="{DynamicResource App.Text.Secondary}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                                        <TextBlock Text="{Binding Name}"
+                                                                   FontWeight="{Binding ComputerEntry, Converter={StaticResource NullToFontWeightConverter}}"
+                                                                   FontSize="13" Foreground="{DynamicResource App.Text.Primary}" VerticalAlignment="Center"/>
+                                                        <TextBlock Text="{Binding ComputerEntry.MachineName}" 
+                                                                   Margin="8,0,0,0" 
+                                                                   Foreground="{DynamicResource App.Text.Secondary}"
+                                                                   FontSize="12" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                    
+                                                    <!-- Action Buttons (only for leaf nodes) -->
+                                                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center"
+                                                                Visibility="{Binding IsLeaf, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                        <Button Style="{StaticResource IconButton}"
+                                                                Margin="0,0,4,0"
+                                                                Tag="{Binding}"
+                                                                Click="FavoriteButton_Click"
+                                                                ToolTip="Toggle Favorite">
+                                                            <Path x:Name="FavoriteIcon" Width="14" Height="14" Stretch="Uniform">
+                                                                <Path.Style>
+                                                                    <Style TargetType="Path">
+                                                                        <Setter Property="Data" Value="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z"/>
+                                                                        <Setter Property="Fill" Value="{DynamicResource App.Text.Secondary}"/>
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding IsFavorite}" Value="True">
+                                                                                <Setter Property="Data" Value="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/>
+                                                                                <Setter Property="Fill" Value="{DynamicResource App.Secondary}"/>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Path.Style>
+                                                            </Path>
+                                                        </Button>
+                                                        <Button Style="{StaticResource IconButton}"
+                                                                ToolTip="Connect"
+                                                                Tag="{Binding}"
+                                                                Click="QuickConnectButton_Click">
+                                                            <!-- Play button icon for connect -->
+                                                            <Path Data="M8,5.14V19.14L19,12.14L8,5.14Z"
+                                                                  Fill="{DynamicResource App.Primary}" Width="12" Height="12" Stretch="Uniform"/>
+                                                        </Button>
+                                                    </StackPanel>
+                                                </Grid>
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="Background" Value="Transparent"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=TreeViewItem}}" Value="True">
+                                                                <Setter Property="Background" Value="{DynamicResource App.Selection}"/>
+                                                            </DataTrigger>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="Background" Value="{DynamicResource App.Hover}"/>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
+                                            </Border>
+                                            <HierarchicalDataTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding ComputerEntry}" Value="{x:Null}">
+                                                    <Setter TargetName="ItemIcon" Property="Data" Value="M3,3H21V7H3V3M4,8H20V21H4V8M9.5,11A0.5,0.5 0 0,0 9,11.5V13H15V11.5A0.5,0.5 0 0,0 14.5,11H9.5Z"/>
+                                                    <Setter TargetName="ItemIcon" Property="Fill" Value="{DynamicResource App.Primary}"/>
+                                                </DataTrigger>
+                                            </HierarchicalDataTemplate.Triggers>
+                                        </HierarchicalDataTemplate>
+                                    </TreeView.Resources>
+                                </TreeView>
+                            </ContentControl>
+                        </Border>
+                    </Border>
+                </Grid>
+            </Grid>
+
+            <!-- Snackbar overlay (Hidden - not needed) -->
+            <materialDesign:Snackbar x:Name="MainSnackbar"
+                                     Grid.Row="1"
+                                     HorizontalAlignment="Right"
+                                     VerticalAlignment="Bottom"
+                                     Margin="0,0,20,20"
+                                     Panel.ZIndex="1000"
+                                     Visibility="Collapsed"/>
+        </Grid>
+        </Border>
+    </materialDesign:DialogHost>
+</windows:BorderlessWindowBase>

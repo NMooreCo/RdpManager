@@ -1,0 +1,65 @@
+<UserControl x:Class="RdpManager.Views.ActiveSessionsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:local="clr-namespace:RdpManager.Views"
+             xmlns:models="clr-namespace:RdpManager.Models"
+             xmlns:converters="clr-namespace:RdpManager.Converters">
+
+    <UserControl.Resources>
+        <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+    </UserControl.Resources>
+
+    <!-- Full-screen RDP Content -->
+    <Grid Background="Black" ClipToBounds="True" UseLayoutRounding="True" SnapsToDevicePixels="True">
+        <ContentControl x:Name="RdpContentHost"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Margin="0"
+                        Padding="0"
+                        ClipToBounds="True"
+                        UseLayoutRounding="True"
+                        SnapsToDevicePixels="True"/>
+
+        <!-- No Selection State -->
+        <StackPanel x:Name="NoSelectionPanel"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Visibility="Visible">
+            <Path Data="M21,16V4H3V16H21M21,2A2,2 0 0,1 23,4V16A2,2 0 0,1 21,18H14V20H16V22H8V20H10V18H3C1.89,18 1,17.1 1,16V4C1,2.89 1.89,2 3,2H21M5,6H14V11H5V6M15,6H19V8H15V6M19,9V14H15V9H19M5,12H9V14H5V12M10,12H14V14H10V12Z"
+                  Fill="{DynamicResource App.Border.Divider}" Width="80" Height="80" Stretch="Uniform" Margin="0,0,0,24"/>
+            <TextBlock Text="No Active Session Selected" FontSize="18" Foreground="{DynamicResource App.Text.Primary}"
+                       HorizontalAlignment="Center" TextAlignment="Center" FontWeight="SemiBold"/>
+            <TextBlock Text="Select a session from the navigation panel&#x0a;to view the remote desktop"
+                       FontSize="13" Foreground="{DynamicResource App.Text.Secondary}"
+                       HorizontalAlignment="Center" TextAlignment="Center"
+                       Margin="0,12,0,0" TextWrapping="Wrap" MaxWidth="350"/>
+        </StackPanel>
+
+        <!-- Popped Out State -->
+        <StackPanel x:Name="PoppedOutPanel"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Visibility="Collapsed">
+            <Path Data="M14,14H19V5H14M10,14H5V5H10M14,3V6H19V20A2,2 0 0,1 17,22H7A2,2 0 0,1 5,20V6H10V3H14M12,8V11H9V13H12V16L16,12L12,8Z"
+                  Fill="{DynamicResource App.Border.Divider}" Width="80" Height="80" Stretch="Uniform" Margin="0,0,0,24"/>
+            <TextBlock Text="Session Open in Another Window" FontSize="18" Foreground="{DynamicResource App.Text.Primary}"
+                       HorizontalAlignment="Center" TextAlignment="Center" FontWeight="SemiBold"/>
+            <TextBlock x:Name="PoppedOutSessionName"
+                       Text=""
+                       FontSize="15" Foreground="{DynamicResource App.Text.Secondary}"
+                       HorizontalAlignment="Center" TextAlignment="Center"
+                       Margin="0,8,0,0"/>
+            <Button x:Name="SwitchToWindowButton"
+                    Click="SwitchToWindow_Click"
+                    Style="{StaticResource PrimaryButton}"
+                    Margin="0,24,0,0">
+                <StackPanel Orientation="Horizontal">
+                    <Path Data="M14,14H19V5H14M10,14H5V5H10M14,3V6H19V20A2,2 0 0,1 17,22H7A2,2 0 0,1 5,20V6H10V3H14M12,8V11H9V13H12V16L16,12L12,8Z"
+                          Fill="{DynamicResource App.Primary.Foreground}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,6,0"/>
+                    <TextBlock Text="Switch to Window"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

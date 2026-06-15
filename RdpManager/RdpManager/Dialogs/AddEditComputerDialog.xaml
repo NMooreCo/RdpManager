@@ -1,0 +1,99 @@
+<UserControl x:Class="RdpManager.Dialogs.AddEditComputerDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             Width="500">
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Title -->
+        <TextBlock Grid.Row="0" x:Name="TitleText" Text="Add Computer"
+                   FontSize="24" FontWeight="Regular"
+                   Margin="0,0,0,24"/>
+        
+        <!-- Machine Name Field -->
+        <TextBox Grid.Row="1" 
+                 x:Name="MachineNameTextBox"
+                 materialDesign:HintAssist.Hint="Machine Name or IP Address"
+                 materialDesign:HintAssist.HelperText="Enter the computer name or IP address"
+                 materialDesign:TextFieldAssist.LeadingIcon="IpNetwork"
+                 Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                 Margin="0,0,0,16"/>
+        
+        <!-- Friendly Name Field -->
+        <TextBox Grid.Row="2"
+                 x:Name="FriendlyNameTextBox"
+                 materialDesign:HintAssist.Hint="Friendly Name"
+                 materialDesign:HintAssist.HelperText="Enter a descriptive name for this computer"
+                 materialDesign:TextFieldAssist.LeadingIcon="Label"
+                 Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                 Margin="0,0,0,16"/>
+        
+        <!-- Domain Field -->
+        <TextBox Grid.Row="3"
+                 x:Name="DomainTextBox"
+                 materialDesign:HintAssist.Hint="Domain (Optional)"
+                 materialDesign:HintAssist.HelperText="Enter the domain name if applicable (e.g., corp.company.com)"
+                 materialDesign:TextFieldAssist.LeadingIcon="Domain"
+                 Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                 Margin="0,0,0,16"/>
+        
+        <!-- Group Field with Autocomplete -->
+        <ComboBox Grid.Row="4"
+                  x:Name="GroupComboBox"
+                  IsEditable="True"
+                  materialDesign:HintAssist.Hint="Group"
+                  materialDesign:HintAssist.HelperText="Select or enter a group (use / for subgroups)"
+                  materialDesign:TextFieldAssist.LeadingIcon="FolderMultiple"
+                  Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                  Margin="0,0,0,16">
+            <!-- Groups will be populated dynamically -->
+        </ComboBox>
+        
+        <!-- Additional Options Expander -->
+        <Expander Grid.Row="5" Header="Additional Options" Margin="0,0,0,16">
+            <Grid Margin="24,16,24,8">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <TextBox Grid.Row="0"
+                         x:Name="NotesTextBox"
+                         materialDesign:HintAssist.Hint="Notes"
+                         TextWrapping="Wrap"
+                         AcceptsReturn="True"
+                         MinLines="3"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         Margin="0,0,0,16"/>
+                
+                <CheckBox Grid.Row="1"
+                          x:Name="AddToFavoritesCheckBox"
+                          Content="Add to Favorites"
+                          Style="{StaticResource MaterialDesignCheckBox}"/>
+            </Grid>
+        </Expander>
+        
+        <!-- Buttons -->
+        <StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="CANCEL" 
+                    Style="{StaticResource MaterialDesignFlatButton}"
+                    IsCancel="True"
+                    Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                    CommandParameter="{x:Null}"
+                    Margin="0,0,8,0"/>
+            <Button Content="SAVE" 
+                    Style="{StaticResource MaterialDesignRaisedButton}"
+                    IsDefault="True"
+                    Click="SaveButton_Click"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

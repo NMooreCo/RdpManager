@@ -1,0 +1,40 @@
+{
+  "Entries": [
+    {
+      "Name": "Web Server 01",
+      "MachineName": "web01.example.local",
+      "Domain": null,
+      "Group": "Production/Web",
+      "LastConnected": "2025-08-29T11:19:20.1521832-06:00",
+      "ConnectionCount": 4,
+      "IsFavorite": true
+    },
+    {
+      "Name": "Database Primary",
+      "MachineName": "db01.example.local",
+      "Domain": null,
+      "Group": "Production/Database",
+      "LastConnected": "2025-08-29T11:20:07.3627899-06:00",
+      "ConnectionCount": 2,
+      "IsFavorite": false
+    },
+    {
+      "Name": "App Server (UAT)",
+      "MachineName": "app01.example.local",
+      "Domain": null,
+      "Group": "UAT/App",
+      "LastConnected": "2025-09-11T10:13:18.4176623-06:00",
+      "ConnectionCount": 2,
+      "IsFavorite": false
+    },
+    {
+      "Name": "Jump Host",
+      "MachineName": "jump01.example.local",
+      "Domain": null,
+      "Group": "Infrastructure",
+      "LastConnected": "2025-09-11T10:09:31.221791-06:00",
+      "ConnectionCount": 1,
+      "IsFavorite": false
+    }
+  ]
+}

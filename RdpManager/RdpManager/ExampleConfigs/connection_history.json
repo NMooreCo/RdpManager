@@ -1,0 +1,30 @@
+[
+  {
+    "MachineName": "web01.example.local",
+    "FriendlyName": "Web Server 01",
+    "LastConnected": "2025-08-28T17:26:28.0600093-06:00",
+    "ConnectionCount": 2,
+    "IsFavorite": true
+  },
+  {
+    "MachineName": "db01.example.local",
+    "FriendlyName": "Database Primary",
+    "LastConnected": "2025-08-29T10:45:45.3305973-06:00",
+    "ConnectionCount": 3,
+    "IsFavorite": false
+  },
+  {
+    "MachineName": "app01.example.local",
+    "FriendlyName": "App Server (UAT)",
+    "LastConnected": "2025-08-29T10:46:01.1029923-06:00",
+    "ConnectionCount": 3,
+    "IsFavorite": false
+  },
+  {
+    "MachineName": "jump01.example.local",
+    "FriendlyName": "Jump Host",
+    "LastConnected": "2025-08-29T09:44:46.7055375-06:00",
+    "ConnectionCount": 1,
+    "IsFavorite": false
+  }
+]

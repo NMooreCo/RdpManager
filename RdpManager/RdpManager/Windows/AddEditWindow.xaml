@@ -1,0 +1,39 @@
+﻿<Window x:Class="RdpManager.AddEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:RdpManager"
+        WindowStartupLocation="CenterOwner"
+        Title="Add/Edit Computer" Height="205" Width="400">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Machine Name -->
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+            <Label Content="Machine Name:" Width="100" VerticalAlignment="Center" />
+            <TextBox Name="MachineNameTextBox" Width="250" />
+        </StackPanel>
+
+        <!-- Friendly Name -->
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,0,0,10">
+            <Label Content="Friendly Name:" Width="100" VerticalAlignment="Center" />
+            <TextBox Name="FriendlyNameTextBox" Width="250" />
+        </StackPanel>
+
+        <!-- Group Name -->
+        <StackPanel Orientation="Horizontal" Grid.Row="2">
+            <Label Content="Group Name:" Width="100" VerticalAlignment="Center" />
+            <TextBox Name="GroupNameTextBox" Width="250" />
+        </StackPanel>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+            <Button Content="OK" Width="75" Margin="5" Click="OKButton_Click" />
+            <Button Content="Cancel" Width="75" Margin="5" Click="CancelButton_Click" />
+        </StackPanel>
+    </Grid>
+</Window>

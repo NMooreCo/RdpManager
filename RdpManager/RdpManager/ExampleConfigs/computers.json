@@ -1,0 +1,50 @@
+[
+  {
+    "MachineName": "web01.example.local",
+    "FriendlyName": "Web Server 01",
+    "Group": "Production/Web",
+    "Domain": null
+  },
+  {
+    "MachineName": "web02.example.local",
+    "FriendlyName": "Web Server 02",
+    "Group": "Production/Web",
+    "Domain": null
+  },
+  {
+    "MachineName": "db01.example.local",
+    "FriendlyName": "Database Primary",
+    "Group": "Production/Database",
+    "Domain": null
+  },
+  {
+    "MachineName": "db02.example.local",
+    "FriendlyName": "Database Replica",
+    "Group": "Production/Database",
+    "Domain": null
+  },
+  {
+    "MachineName": "app01.example.local",
+    "FriendlyName": "App Server (UAT)",
+    "Group": "UAT/App",
+    "Domain": null
+  },
+  {
+    "MachineName": "app02.example.local",
+    "FriendlyName": "App Server (Dev)",
+    "Group": "Dev/App",
+    "Domain": null
+  },
+  {
+    "MachineName": "192.168.1.50",
+    "FriendlyName": "Build Agent",
+    "Group": "Dev/CI",
+    "Domain": "WORKGROUP"
+  },
+  {
+    "MachineName": "jump01.example.local",
+    "FriendlyName": "Jump Host",
+    "Group": "Infrastructure",
+    "Domain": null
+  }
+]
